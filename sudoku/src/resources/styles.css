@@ -1,0 +1,24 @@
+/* styles.css */
+.big-grid-pane {
+    -fx-background-color: white; /* Light blue to white gradient */
+    -fx-border-width: 1;
+    -fx-border-color: #009688; /* Teal border color */
+}
+
+.grid-pane {
+    -fx-background-color:rgb(0,0,0,0); /* Neon pink background color for cells */
+    -fx-border-width: 1;
+    -fx-border-color: #344861; /* Slightly darker neon pink border color */
+}
+
+/* Style for grid labels */
+.grid-label {
+    -fx-font-family: "Sans-serif";
+    -fx-font-size: 32px; /* Adjust the font size as needed */
+    -fx-font-weight: bold; /* Adjust the font weight as needed */
+    -fx-text-fill: black; /* Adjust the text color as needed */
+    
+    /* Center text within the cell */
+    -fx-alignment: CENTER;
+    -fx-content-display: CENTER;
+}
