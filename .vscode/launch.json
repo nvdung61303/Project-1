@@ -4,6 +4,8 @@
     // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
     "version": "0.2.0",
     "configurations": [
+
+
         {
             "type": "java",
             "name": "Current File",
@@ -12,12 +14,11 @@
         },
         {
             "type": "java",
-            "name": "App",
+            "name": "Main",
             "request": "launch",
-            "mainClass": "App",
-            "projectName": "sudoku_c9b6b395",
-            "vmArgs": "--module-path \"F:/where the c go/javafx-sdk-21.0.1/lib\" --add-modules javafx.controls,javafx.fxml"
-
+            "mainClass": "mainscreen.Main",
+            "projectName": "GitHub_5d76cdea",
+            "vmArgs": "--module-path \"C:/Users/EVO/Downloads/javafx-sdk-17.0.9/lib\" --add-modules javafx.controls,javafx.fxml",
         }
     ]
 }

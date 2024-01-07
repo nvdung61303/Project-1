@@ -19,9 +19,9 @@ import javafx.scene.control.ButtonType;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import game.*;
-
 
 public class MainscreenController {
 
@@ -60,7 +60,6 @@ public class MainscreenController {
     @FXML
     private GridPane grid22;
 
-
     // The sample array to test the input method
     int[][] sample = {
         {5, 3, 0, 0, 7, 0, 0, 0, 0},
@@ -73,7 +72,7 @@ public class MainscreenController {
         {0, 0, 0, 4, 1, 9, 0, 0, 5},
         {0, 0, 0, 0, 8, 0, 0, 7, 9}
     };
-
+    
 
     @FXML
     private URL location;
@@ -187,6 +186,11 @@ public class MainscreenController {
     }
 
     private void initializeSudokuBoard() {
+
+        SudokuBoard sudokuBoard = new SudokuBoard();
+        sudokuBoard.fill();;
+        sudokuBoard.generate();
+        sample = sudokuBoard.mt;
         // Loop through each row and column of the array
         for (int row = 0; row < 9; row++) {
             for (int col = 0; col < 9; col++) {
@@ -205,6 +209,16 @@ public class MainscreenController {
                     label.setMaxHeight(Double.MAX_VALUE);
                     gridPane.add(label, col % 3, row % 3);
                 }
+                
+                else if(value==0){
+                    
+                    TextField textField = new TextField();
+                    textField.getStyleClass().add("grid-label");
+                    textField.setAlignment(Pos.CENTER);
+                    textField.setMaxWidth(Double.MAX_VALUE);
+                    textField.setMaxHeight(Double.MAX_VALUE);
+                    gridPane.add(textField, col % 3, row % 3);
+                }
             }
         }
     }
@@ -215,23 +229,23 @@ public class MainscreenController {
             if (col < 3) {
                 return grid00;
             } else if (col < 6) {
-                return grid01;
+                return grid10;
             } else {
-                return grid02;
+                return grid20;
             }
         } else if (row < 6) {
             if (col < 3) {
-                return grid10;
+                return grid01;
             } else if (col < 6) {
                 return grid11;
             } else {
-                return grid12;
+                return grid21;
             }
         } else {
             if (col < 3) {
-                return grid20;
+                return grid02;
             } else if (col < 6) {
-                return grid21;
+                return grid12;
             } else {
                 return grid22;
             }
