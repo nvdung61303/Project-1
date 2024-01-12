@@ -1,8 +1,8 @@
 /* styles.css */
 .big-grid-pane {
     -fx-background-color: white; /* Light blue to white gradient */
-    -fx-border-width: 1;
-    -fx-border-color: #009688; /* Teal border color */
+    -fx-border-width: 2;
+    -fx-border-color: #344861; /* Teal border color */
 }
 
 .grid-pane {
@@ -13,12 +13,35 @@
 
 /* Style for grid labels */
 .grid-label {
-    -fx-font-family: "Sans-serif";
-    -fx-font-size: 32px; /* Adjust the font size as needed */
-    -fx-font-weight: bold; /* Adjust the font weight as needed */
+    font-family: 'Glacial';
+    -fx-font-size: 28px; /* Adjust the font size as needed */
     -fx-text-fill: black; /* Adjust the text color as needed */
     
     /* Center text within the cell */
     -fx-alignment: CENTER;
     -fx-content-display: CENTER;
 }
+
+/* Style for ToggleButton when not selected */
+.not-selected-toggle-button {
+    -fx-font-family: "Sans-serif";
+    -fx-font-size: 32px;
+    -fx-font-weight:normal;
+    -fx-text-fill: black;
+    -fx-background-color: transparent;
+}
+
+/* Style for ToggleButton when selected */
+.selected-toggle-button {
+    -fx-font-family: "Sans-serif";
+    -fx-font-size: 32px;
+    -fx-font-weight: bold;
+    -fx-text-fill: black;
+    -fx-background-color: lightgray;
+}
+
+@font-face {
+    font-family: 'Glacial';
+    src: url('fonts/Glacial/GlacialIndifference-Regular.otf') format('opentype');
+}
+

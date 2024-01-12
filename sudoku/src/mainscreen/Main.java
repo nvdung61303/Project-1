@@ -16,10 +16,13 @@ public class Main extends Application {
         // Load the FXML file
         Parent root = FXMLLoader.load(getClass().getResource("Mainscreen.fxml"));
 
+        Scene scene = new Scene(root, 1280, 720);
         // Set up the primary stage
+
         primaryStage.setTitle("SUDOKU");
-        primaryStage.setScene(new Scene(root, 1280, 720));
+        primaryStage.setScene(scene);
         primaryStage.setResizable(false);
+
 
         // Show the stage
         primaryStage.show();
@@ -28,8 +31,9 @@ public class Main extends Application {
         primaryStage.setY((primScreenBounds.getHeight() - primaryStage.getHeight()) / 2);
         primaryStage.setOnCloseRequest(event -> {
         // Perform any cleanup or necessary actions
-        Platform.exit();
-});
+            Platform.exit();
+            System.exit(0);
+        });
     }
 
     public static void main(String[] args) {

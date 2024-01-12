@@ -1,9 +1,10 @@
-package mainscreen;
+package game;
+
 import java.util.*;
 public class SudokuBoard {
     public int[][] mt = new int[9][9];
 
-     void fill(){
+    public void fill(){
         for(int i=0;i<9;i++){
             for(int j=0;j<9;j++)
                 mt[i][j] = 0;
@@ -16,7 +17,7 @@ public class SudokuBoard {
         }
         return true;
     }
-     void generate(){
+    public void generate(){
         int[][] board = new int[9][9];
         ArrayList<Integer> list = new ArrayList<Integer>(9);
         for(int i=1;i<=9;i++) list.add(i);

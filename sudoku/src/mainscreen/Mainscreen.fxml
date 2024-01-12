@@ -49,7 +49,7 @@
 <?import javafx.scene.paint.Color?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="mainscreen.MainscreenController">
+<AnchorPane xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="mainscreen.MainscreenController">
    <children>
       <VBox prefHeight="720.0" prefWidth="1280.0">
         <children>
@@ -68,7 +68,7 @@
             <items>
               <AnchorPane prefHeight="551.0" prefWidth="481.0">
                      <children>
-                        <GridPane alignment="CENTER" layoutX="228.0" layoutY="56.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="500.0" styleClass="big-grid-pane" stylesheets="@../resources/styles.css">
+                        <GridPane alignment="CENTER" layoutX="239.0" layoutY="34.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="540.0" prefWidth="540.0" styleClass="big-grid-pane" stylesheets="@../resources/styles.css">
                           <columnConstraints>
                               <ColumnConstraints fillWidth="false" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                               <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -190,7 +190,7 @@
                               </GridPane>
                            </children>
                         </GridPane>
-                        <Button fx:id="startButton" layoutX="451.0" layoutY="576.0" mnemonicParsing="false" onAction="#startButtonPressed" prefHeight="58.0" prefWidth="58.0" text="Start" />
+                        <Button fx:id="startButton" layoutX="480.0" layoutY="590.0" mnemonicParsing="false" onAction="#startButtonPressed" prefHeight="58.0" prefWidth="58.0" text="Start" />
                         <Label fx:id="timer" centerShape="false" contentDisplay="TOP" prefHeight="35.0" prefWidth="178.0" text="TIMER: 00:00:00 ">
                            <opaqueInsets>
                               <Insets />
@@ -199,8 +199,8 @@
                               <Font size="24.0" />
                            </font>
                         </Label>
-                        <Button fx:id="giveUpButton" disable="true" layoutX="769.0" layoutY="531.0" mnemonicParsing="false" onAction="#giveUpButtonPressed" prefHeight="25.0" prefWidth="58.0" text="Give Up" visible="false" />
-                        <Button fx:id="checkButton" disable="true" layoutX="769.0" layoutY="275.0" mnemonicParsing="false" onAction="#checkButtonPressed" prefHeight="58.0" prefWidth="58.0" text="Check" visible="false" />
+                        <Button fx:id="giveUpButton" layoutX="821.0" layoutY="547.0" mnemonicParsing="false" onAction="#giveUpButtonPressed" prefHeight="27.0" prefWidth="58.0" text="Give Up" visible="false" />
+                        <Button fx:id="checkButton" disable="true" layoutX="821.0" layoutY="275.0" mnemonicParsing="false" onAction="#checkButtonPressed" prefHeight="58.0" prefWidth="58.0" text="Check" visible="false" />
                      </children>
               </AnchorPane>
               <AnchorPane prefHeight="671.0" prefWidth="477.0">

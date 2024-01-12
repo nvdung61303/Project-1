@@ -1,5 +1,6 @@
 package mainscreen;
 
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -46,7 +47,16 @@ public class SolutionScreenController {
         
         }    
     }
-    
+
+
+    public void setStage(Stage stage) {
+        this.stage = stage;
+
+        stage.setOnCloseRequest(event -> {
+            Platform.exit();
+            System.exit(0);
+        });
+    }
 
 
     @FXML
@@ -64,7 +74,7 @@ public class SolutionScreenController {
         assert confirmButton != null : "fx:id=\"comfirmButton\" was not injected: check your FXML file 'SolutionScreen.fxml'.";
         assert nextButton != null : "fx:id=\"nextButton\" was not injected: check your FXML file 'SolutionScreen.fxml'.";
         assert prevButton != null : "fx:id=\"prevButton\" was not injected: check your FXML file 'SolutionScreen.fxml'.";
-        
+
+    }
 }
 
-}
