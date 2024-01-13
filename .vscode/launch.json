@@ -4,8 +4,6 @@
     // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
     "version": "0.2.0",
     "configurations": [
-
-
         {
             "type": "java",
             "name": "Current File",
@@ -17,7 +15,7 @@
             "name": "Main",
             "request": "launch",
             "mainClass": "mainscreen.Main",
-            "projectName": "GitHub_5d76cdea",
+            "projectName": "Project-1_925d3ef6",
             "vmArgs": "--module-path \"C:/Users/EVO/Downloads/javafx-sdk-17.0.9/lib\" --add-modules javafx.controls,javafx.fxml",
         }
     ]
