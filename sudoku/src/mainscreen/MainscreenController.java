@@ -1,11 +1,14 @@
 package mainscreen;
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Parent;
@@ -16,8 +19,9 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
+import javafx.util.Pair;
 import javafx.scene.control.Label;
-import javafx.scene.control.ToggleButton;
+import javafx.scene.control.Toggle;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.GridPane;
 import javafx.scene.text.Font;
@@ -25,14 +29,17 @@ import game.*;
 import javafx.scene.input.MouseEvent;
 public class MainscreenController {
 
-    private Stage solutionStage;
+    public Stage solutionStage;
     private Scene scene;
     private Parent root;
     private Stopwatch stopwatch;
     ToggleGroup group = new ToggleGroup();
+    List<InitialCell> initialCells = new ArrayList<>();
     /*------------------------
      * fx:id from SceneBuilder
      ------------------------*/
+
+    // buttons
     @FXML
     private Button checkButton;
     @FXML
@@ -40,7 +47,13 @@ public class MainscreenController {
     @FXML
     private Button startButton;
     @FXML
+    private Button hintButton;
+
+    // timer
+    @FXML
     private Label timer;
+
+    // Sudoku board
     @FXML
     private GridPane grid00;
     @FXML
@@ -59,10 +72,12 @@ public class MainscreenController {
     private GridPane grid21;
     @FXML
     private GridPane grid22;
-    // The sample array to test the input method
-    int[][] board = new int[9][9];
-    int[][] initialBoard = new int[9][9];
-    int press = 0;
+
+    // The array to load into the board
+    SudokuBoard sudokuBoard = new SudokuBoard();
+    int[][] initialBoard= new int[9][9];
+
+
     @FXML
     private URL location;
     /* --------------
@@ -85,7 +100,7 @@ public class MainscreenController {
         if (result.isPresent() && result.get() == buttonTypeYes) {
             // user clicked "Yes" -> Stop the stopwatch + Open new scene to display answers
             stopStopwatch();
-            openSolutionScene(event);
+            openSolutionScene(event, false);
         } else {
             // user clicked "No" -> Continue the Sudoku game
             System.out.println("Continuing playing...");
@@ -100,6 +115,8 @@ public class MainscreenController {
         giveUpButton.setVisible(true);
         checkButton.setDisable(false);
         checkButton.setVisible(true);
+        hintButton.setDisable(false);
+        hintButton.setVisible(true);
         // the stopwatchsttart
         startStopwatch();
         // initialize the Sudoku board
@@ -108,29 +125,38 @@ public class MainscreenController {
     @FXML
     void checkButtonPressed(ActionEvent event) {
         // check if the board is filled
-        if (!containsZero(board)) {
-            // stop the stopwatch
-            String finalTime = stopStopwatch();
-            // make a dialog to ask user wether give up or not
-            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-            alert.setTitle("Congratulations!");
-            alert.setHeaderText("You have completed the Sudoku game in: " + finalTime +  "\nDo you want to see the answers?");
-            alert.setContentText("Choose your option:");
-            // add "Yes" and "No" buttons to the dialog
-            ButtonType buttonTypeYes = new ButtonType("Yes");
-            ButtonType buttonTypeNo = new ButtonType("No");
-            alert.getButtonTypes().setAll(buttonTypeYes, buttonTypeNo);
-            // Show the dialog and wait for the response
-            Optional<ButtonType> result = alert.showAndWait();
-            // handle the user's choice
-            if (result.isPresent() && result.get() == buttonTypeYes) {
-                // user clicked "Yes" -> Stop the stopwatch + open new scene to display answers
-                openSolutionScene(event);
+        if (!containsZero(sudokuBoard.mt)) {
+            if (sudokuBoard.isValid()) {
+                // the board is filled and correct
+                System.out.println("Correct");
+                // stop the stopwatch
+                String finalTime = stopStopwatch();
+                Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+                alert.setTitle("Congratulations!");
+                alert.setHeaderText("You have completed the Sudoku game in: " + finalTime +  "\nDo you want to see the answers?");
+                alert.setContentText("Choose your option:");
+                // add "Yes" and "No" buttons to the dialog
+                ButtonType buttonTypeYes = new ButtonType("Yes");
+                ButtonType buttonTypeNo = new ButtonType("No");
+                alert.getButtonTypes().setAll(buttonTypeYes, buttonTypeNo);
+                Optional<ButtonType> result = alert.showAndWait();
+                if (result.isPresent() && result.get() == buttonTypeYes) {
+                    // user clicked "Yes" -> Stop the stopwatch + open new scene to display answers
+                    openSolutionScene(event, true);
+                } else {
+                    // user clicked "No" -> continue the Sudoku game
+                    System.out.println("restartting...");
+                    openNewGameScene(event);
+                }
             } else {
-                // user clicked "No" -> continue the Sudoku game
-                System.out.println("restartting...");
-                openNewGameScene(event);
-                
+                // the board is filled but incorrect
+                System.out.println("Incorrect");
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Incorrect!");
+                alert.setHeaderText("The board is incorrect!");
+                alert.setContentText("Please check carefully and try again!");
+                alert.showAndWait();
+    
             }
         } else {
             // the board is not filled
@@ -142,18 +168,68 @@ public class MainscreenController {
         }
     }
 
-    private void openSolutionScene(ActionEvent event) {
+    @FXML
+    void hintButtonPressed(MouseEvent event) {
+        // When the button is pressed, change the color of the invalid cells to red
+        group.selectToggle(null);
+        List<Pair<Integer, Integer>> invalidCells = checkBoard(sudokuBoard);
+        System.out.println(invalidCells);
+        for (Pair<Integer, Integer> pair : invalidCells) {
+            int row = pair.getKey();
+            int col = pair.getValue();
+            for (Toggle toggle : group.getToggles()) {
+                InputCell button = (InputCell) toggle;
+                if (button.getRow() == row && button.getCol() == col) {
+                    button.isWrong();
+                    break;
+                }
+            }
+            for (InitialCell cell : initialCells) {
+                if (cell.getRow() == row && cell.getCol() == col) {
+                    cell.isWrong();
+                    break;
+                }
+            }
+        }
+
+    }
+
+    @FXML
+    void hintButtonReleased(MouseEvent event) {
+        for (Toggle toggle : group.getToggles()) {
+            InputCell button = (InputCell) toggle;
+            if (button.isSelected()) {
+                // The cell is selected, set its background color to light gray
+                button.selected();;
+            } else {
+                // The cell is not selected, set its background color to transparent
+                button.unselected();
+            }
+        }
+        for (InitialCell cell : initialCells) {
+            cell.defaultStyle();
+        }
+    };
+    /*------------------------
+     * Scene Change Functions
+     ------------------------*/
+
+    public void openSolutionScene(ActionEvent event, boolean result) {
         try {
             // Load the FXML file of the new scene;
             FXMLLoader loader = new FXMLLoader(getClass().getResource("SolutionScreen.fxml"));
+            solutionStage =  (Stage)((Node)event.getSource()).getScene().getWindow();
             root = loader.load();
+            scene = new Scene(root, 1080, 720);
             // Create a new stage
-            solutionStage =  ((Stage)((Node)event.getSource()).getScene().getWindow());
             SolutionScreenController controller = loader.getController();
+            controller.setSolved(result);
+            controller.setSolutions(sudokuBoard.sdkSolutions);
+            controller.setInitialBoard(initialBoard);
+            controller.updateMessages();
             controller.setStage(solutionStage);
             // Set the new scene
             // Calculate the center coordinates of the screen
-            scene = new Scene(root, 720, 720);
             solutionStage.setTitle("OOPS!");
             solutionStage.setScene(scene);
             solutionStage.show();
@@ -161,7 +237,7 @@ public class MainscreenController {
             solutionStage.setX((primScreenBounds.getWidth() - solutionStage.getWidth()) / 2);
             solutionStage.setY((primScreenBounds.getHeight() - solutionStage.getHeight()) / 2);
         } catch (IOException e) {
-            System.out.println(e);
+            e.printStackTrace();
         }    
             // Handle the exception (e.g., show an error message)
         System.out.println("Opening Answers Scene...");
@@ -169,6 +245,9 @@ public class MainscreenController {
     /*------- 
     Utilities 
     ---------*/
+
+    // 1. Stopwatch
+
     // create a thread and start the stopwatch
     public void startStopwatch() {
         stopwatch = new Stopwatch();
@@ -191,70 +270,76 @@ public class MainscreenController {
         return finalTime;
     }
 
+    // 2. Sudoku board
 
     // initialize the Sudoku board
-    private void initializeSudokuBoard() {
-        SudokuBoard sudokuBoard = new SudokuBoard();
+    void initializeSudokuBoard() {
         sudokuBoard.fill();;
         sudokuBoard.generate();
-        board = sudokuBoard.mt;
-        initialBoard = sudokuBoard.mt;
-        // Loop through each row and column of the array
+        for (int i = 0; i < 9; i++) {
+            for (int j = 0; j < 9; j++) {
+                if (sudokuBoard.mt[i][j] != 0){
+                    initialBoard[i][j] = 1;
+                } else {
+                    initialBoard[i][j] = 0;
+                }
+            }
+        }        
+
+
         for (int row = 0; row < 9; row++) {
             for (int col = 0; col < 9; col++) {
                 // Get the gridpane corresponding to the row and column
                 GridPane gridPane = getGridPane(row, col);
                 // Get the value from the array
-                int value = board[row][col];  //replace this with the sudoku game generated array
+                int value = sudokuBoard.mt[row][col];  //replace this with the sudoku game generated array
                 final int finalRow = row; // Create a final copy of row
                 final int finalCol = col; // Create a final copy of col
                 // Create a label with the value and add it to the gridpane
                 if (value != 0) {
-                    Label label = new Label(String.valueOf(value));
-                    label.getStyleClass().add("grid-label");
+                    InitialCell label = new InitialCell(row, col, String.valueOf(value));
+                    label.defaultStyle();
                     label.setAlignment(Pos.CENTER);
-                    label.setMaxWidth(Double.MAX_VALUE);
-                    label.setMaxHeight(Double.MAX_VALUE);
+                    label.setMaxWidth(56.1);
+                    label.setMaxHeight(56.1);
+                    label.setTranslateX(1);
+                    initialCells.add(label);
                     gridPane.add(label, col % 3, row % 3);
                 }
                 else if(value==0){
-                    ToggleButton button = new ToggleButton();
-                    button.setStyle(
-                        "font-family: 'Glacial';" +
-                        "-fx-font-size: 28px;" +
-                        "-fx-font-weight:normal;" +
-                        "-fx-text-fill: black;" +
-                        "-fx-background-color: transparent;" +
-                        "-fx-background-radius: 0;");
-                    button.setToggleGroup(group); // add the button to the group
-                    button.setAlignment(Pos.CENTER);
-                    button.setMaxWidth(58);
-                    button.setMaxHeight(58);
+                    InputCell cell = new InputCell(row, col);
+                    cell.unselected();
+                    cell.setAlignment(Pos.CENTER);
+                    cell.setPrefWidth(56.03);
+                    cell.setPrefHeight(56.03);
+                    cell.setTranslateX(1);
+                    cell.setPadding(Insets.EMPTY);
+                    cell.setToggleGroup(group); // add the button to the group
                     // set the button's on click event
-                    button.setOnAction(event -> {
-                        if (group.getSelectedToggle() == button) {
+                    cell.setOnAction(event -> {
+                        if (group.getSelectedToggle() == cell) {
                             event.consume(); // prevent the button from being deselected
                             return;
                         }
                     });
-                    button.addEventFilter(MouseEvent.MOUSE_PRESSED, mouseEvent -> {
-                        if (button.isSelected()) { // prevent the button from being change color when it is selected again
+                    cell.addEventFilter(MouseEvent.MOUSE_PRESSED, mouseEvent -> {
+                        if (cell.isSelected()) { // prevent the button from being change color when it is selected again
                             mouseEvent.consume();
                         }
                     });
-                    button.setOnKeyPressed(keyEvent -> {
+                    cell.setOnKeyPressed(keyEvent -> {
                         String input = keyEvent.getText();
                         // check if the input is a digit from 1 to 9
                         if (input.matches("[1-9]")) {
-                            button.setText(input);
+                            cell.setText(input);
                             int inputValue = Integer.parseInt(input);
-                            board[finalRow][finalCol] = inputValue;
-                            printBoard(board);
+                            sudokuBoard.updateValue(finalRow, finalCol, inputValue);
+                            printBoard(sudokuBoard.mt);
                         } else {
                             keyEvent.consume();
                         }
                     });
-                    gridPane.add(button, col % 3, row % 3);
+                    gridPane.add(cell, col % 3, row % 3);
                 }
             }
         }
@@ -262,46 +347,22 @@ public class MainscreenController {
          group.selectedToggleProperty().addListener((observable, oldToggle, newToggle) -> {
             // a button is deselected 
             if (oldToggle != null && newToggle == null) {
-                ((ToggleButton) oldToggle).setStyle(
-                        "font-family: 'Glacial';" +
-                        "-fx-font-size: 28px;" +
-                        "-fx-font-weight:normal;" +
-                        "-fx-text-fill: black;" +
-                        "-fx-background-color: transparent;" +
-                        "-fx-background-radius: 0;");
+                ((InputCell) oldToggle).unselected();
             }
             // a button is selected for the first time or a different button is selected
             else if (oldToggle != newToggle && newToggle != null) {
                 if (oldToggle != null) {
-                    ((ToggleButton) oldToggle).setStyle(
-                        "font-family: 'Glacial';" +
-                        "-fx-font-size: 28px;" +
-                        "-fx-font-weight:normal;" +
-                        "-fx-text-fill: black;" +
-                        "-fx-background-color: transparent;" +
-                        "-fx-background-radius: 0;");
+                    ((InputCell) oldToggle).unselected();
                 }
-                ((ToggleButton) newToggle).setStyle(
-                        "font-family: 'Glacial';" +
-                        "-fx-font-size: 28px;" +
-                        "-fx-font-weight:normal;" +
-                        "-fx-text-fill: black;" +
-                        "-fx-background-color: lightgray;" +
-                        "-fx-background-radius: 0;");
+                ((InputCell) newToggle).selected();
             }
             // the same button is clicked
             else if (oldToggle != null && newToggle != null && oldToggle == newToggle) {
-                ((ToggleButton) newToggle).setStyle(                        
-                        "font-family: 'Glacial';" +
-                        "-fx-font-size: 28px;" +
-                        "-fx-font-weight:normal;" +
-                        "-fx-text-fill: black;" +
-                        "-fx-background-color: lightgray;" +
-                        "-fx-background-radius: 0;");
+                ((InputCell) newToggle).selected();
             }
         });
     }
-    // Determine the gridpane based on the row and column indices
+    // determine the gridpane based on the row and column indices
     private GridPane getGridPane(int row, int col) {
         if (row < 3) {
             if (col < 3) {
@@ -329,7 +390,8 @@ public class MainscreenController {
             }
         }
     } 
-    void printBoard(int[][] board){ //print the board in console
+    //print the board in console
+    void printBoard(int[][] board){
         for(int i=0;i<9;i++){
             for(int j=0;j<9;j++){
                 System.out.print(board[i][j]+" ");
@@ -338,8 +400,8 @@ public class MainscreenController {
         }
         System.out.println();
     }
-
-    public boolean containsZero(int[][] array) { //check if the board contains 0
+    //check if the board contains 0
+    public boolean containsZero(int[][] array) { 
         for (int i = 0; i < array.length; i++) {
             for (int j = 0; j < array[i].length; j++) {
                 if (array[i][j] == 0) {
@@ -352,7 +414,7 @@ public class MainscreenController {
 
     private void openNewGameScene(ActionEvent event) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("MainScreen.fxml")); // replace with your initial game scene FXML file
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("MainScreen.fxml"));
             Parent root = loader.load();
             Stage stage = (Stage)((Node)event.getSource()).getScene().getWindow();
             stage.setScene(new Scene(root));
@@ -360,6 +422,37 @@ public class MainscreenController {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    // find the invalid cells
+    public List<Pair<Integer, Integer>> checkBoard(SudokuBoard sudokuBoard) {
+        List<Pair<Integer, Integer>> invalidCells = new ArrayList<>();
+        
+        for (int row = 0; row < 9; row++) {
+            outer:
+            for (int col = 0; col < 9; col++) {
+                int cellValue = sudokuBoard.mt[row][col];
+                if (cellValue == 0) continue;  // skip empty cells
+                // check the other cells in the same row, column, and subgrid
+                for (int otherRow = 0; otherRow < 9; otherRow++) {
+                    for (int otherCol = 0; otherCol < 9; otherCol++) {
+                        if (row == otherRow && col == otherCol) continue;  // skip the cell itself
+                        int otherValue = sudokuBoard.mt[otherRow][otherCol];
+                        int gridRow = row / 3;
+                        int gridCol = col / 3;
+                        int otherGridRow = otherRow / 3;
+                        int otherGridCol = otherCol / 3;
+                        if (cellValue == otherValue && (row == otherRow || col == otherCol || (gridRow == otherGridRow && gridCol == otherGridCol))) {
+                            // the value is the same and the cell is in the same row, column, or subgrid
+                            invalidCells.add(new Pair<>(row, col));
+                            invalidCells.add(new Pair<>(otherRow, otherCol));
+                            continue outer;  // continue with the next cell
+                        }
+                    }
+                }
+            }
+        }
+        return invalidCells;
     }
     @FXML
     void initialize() {

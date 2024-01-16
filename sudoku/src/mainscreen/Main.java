@@ -15,14 +15,11 @@ public class Main extends Application {
     public void start(Stage primaryStage) throws Exception {
         // Load the FXML file
         Parent root = FXMLLoader.load(getClass().getResource("Mainscreen.fxml"));
-
         Scene scene = new Scene(root, 1280, 720);
         // Set up the primary stage
-
         primaryStage.setTitle("SUDOKU");
         primaryStage.setScene(scene);
         primaryStage.setResizable(false);
-
 
         // Show the stage
         primaryStage.show();

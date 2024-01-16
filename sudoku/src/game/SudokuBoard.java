@@ -4,7 +4,7 @@ import java.util.*;
 public class SudokuBoard {
     public int[][] mt = new int[9][9];
     int[][] temp = new int[9][9];
-    List<int[][]> sdkSolutions = new ArrayList<>();
+    public List<int[][]> sdkSolutions = new ArrayList<>();
     int cnt =0;
 
     public void fill(){
@@ -16,12 +16,32 @@ public class SudokuBoard {
     }
 
 
-     boolean check(int n,int r, int c,int[][] board){
+    boolean check(int n,int r, int c,int[][] board){
         for(int i=0;i<9;i++){
-            if((n == board[r][i])||(n == board[i][c])||(n == board[3*(r/3)+i/3][3*(c/3)+i%3])) return false;
+            if((i != c && n == board[r][i])
+            ||(i != r && n == board[i][c])
+            ||((3*(r/3)+i/3 != r || (3*(c/3)+i%3) != c) && n == board[3*(r/3)+i/3][3*(c/3)+i%3])) 
+            return false;
         }
         return true;
     }
+
+    public boolean isValid() {
+        for (int row = 0; row < 9; row++) {
+            for (int col = 0; col < 9; col++) {
+                int num = mt[row][col];
+                if (num != 0 && !check(num, row, col, mt)) {
+                    return false;
+                }
+            }
+        }
+        // All cells are valid
+        return true;
+    }
+
+
+
+
 
 
     public void generate(){
@@ -132,6 +152,10 @@ public class SudokuBoard {
 
 
         }
+    }
+
+    public void updateValue(int row, int col, int value){
+        this.mt[row][col] = value;
     }
 
 }
