@@ -62,7 +62,7 @@ public class SolutionScreenController {
     public List<int[][]> solutions = new ArrayList<>();
     public int arrayIndex = 0;
     public int[][] initialBoard = new int[9][9];
-
+    public int cnt;
 
 
     @FXML
@@ -214,6 +214,9 @@ public class SolutionScreenController {
         }
     } 
 
+    public void setCnt(int cnt) {
+        this.cnt = cnt;
+    }
     public void setStage(Stage stage) {
         this.stage = stage;
     }
@@ -242,7 +245,7 @@ public class SolutionScreenController {
 
     public void updateMessages() {
         setMessage1(isSolved);
-        setMessage2(solutions.size());
+        setMessage2(cnt);
     }
      
 

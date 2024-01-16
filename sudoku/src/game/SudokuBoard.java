@@ -5,7 +5,7 @@ public class SudokuBoard {
     public int[][] mt = new int[9][9];
     int[][] temp = new int[9][9];
     public List<int[][]> sdkSolutions = new ArrayList<>();
-    int cnt =0;
+    public int cnt =0;
 
     public void fill(){
         for(int i=0;i<9;i++){
@@ -87,23 +87,25 @@ public class SudokuBoard {
         }
         
         
-        printboard();  
-        printsolutions(sdkSolutions);
+        //printboard();  
+        printsolutions();
 
     }
 
     void solve(int r,int c){
-        if(this.cnt>64) {
-            //System.out.println("Qua Nhieu Loi Giai");
-            return;
-        } 
+        // if(this.cnt>64) {
+        //     //System.out.println("Qua Nhieu Loi Giai");
+        //     return;
+        // } 
         if (r == 9) {
 
             int[][] solution = new int[9][9];
             for (int i = 0; i < 9; i++) {
                 System.arraycopy(temp[i], 0, solution[i], 0, 9);
             }
-            this.sdkSolutions.add(solution);
+            if (cnt < 30) {
+                this.sdkSolutions.add(solution);
+            }
             this.cnt++;
             return;
         }
@@ -125,21 +127,23 @@ public class SudokuBoard {
         }
     }
     
-    void printsolutions(List<int[][]> sdkSolutions){
-        int i=0;
-        System.out.println();
-        for (int[][] solution : sdkSolutions) {
-            System.out.println("loi giai thu " + ++i);
-            System.out.println();
-            for (int[] row : solution) {
-                for (int value : row) {
-                    System.out.print(value + " ");
-                }
-                System.out.println();
-            }
-            System.out.println();
-        }
-        if(sdkSolutions.size()>=65) System.out.println("Co qua nhieu loi giai" +" " + sdkSolutions.size());
+    public int printsolutions(){
+        // int i=0;
+        // System.out.println();
+        // for (int[][] solution : sdkSolutions) {
+        //     System.out.println("loi giai thu " + ++i);
+        //     System.out.println();
+        //     for (int[] row : solution) {
+        //         for (int value : row) {
+        //             System.out.print(value + " ");
+        //         }
+        //         System.out.println();
+        //     }
+        //     System.out.println();
+        // }
+        System.out.println(this.cnt);
+        return cnt;
+        //if(sdkSolutions.size()>=65) System.out.println("Co qua nhieu loi giai" +" " + sdkSolutions.size());
     }
 
     void printboard(){

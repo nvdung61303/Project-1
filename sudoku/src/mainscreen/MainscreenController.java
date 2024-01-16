@@ -226,6 +226,7 @@ public class MainscreenController {
             controller.setSolved(result);
             controller.setSolutions(sudokuBoard.sdkSolutions);
             controller.setInitialBoard(initialBoard);
+            controller.setCnt(sudokuBoard.printsolutions());
             controller.updateMessages();
             controller.setStage(solutionStage);
             // Set the new scene
