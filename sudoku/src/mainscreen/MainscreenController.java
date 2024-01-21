@@ -17,10 +17,12 @@ import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.DialogPane;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.util.Pair;
 import javafx.scene.control.Label;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.Toggle;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.GridPane;
@@ -49,11 +51,15 @@ public class MainscreenController {
     @FXML
     private Button hintButton;
 
+    // menu items
+    @FXML
+    private MenuItem rule;
+
     // timer
     @FXML
     private Label timer;
 
-    // Sudoku board
+    // sudoku board
     @FXML
     private GridPane grid00;
     @FXML
@@ -72,6 +78,7 @@ public class MainscreenController {
     private GridPane grid21;
     @FXML
     private GridPane grid22;
+
 
     // The array to load into the board
     SudokuBoard sudokuBoard = new SudokuBoard();
@@ -191,7 +198,6 @@ public class MainscreenController {
                 }
             }
         }
-
     }
 
     @FXML
@@ -210,6 +216,27 @@ public class MainscreenController {
             cell.defaultStyle();
         }
     };
+
+    /*------------------------
+     * Menu Item Listener
+     ------------------------*/
+
+    @FXML
+    void rulePressed(ActionEvent event) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Rules");
+        alert.setHeaderText("How to play Sudoku?");
+        alert.setContentText("Player is provided a 9x9 board filled with cells. Many cells have a number in it.\n" +
+        "Player need to fill the blank cells with the numbers from 1 through to 9 so that:\n" +
+        "1 - Each 3x3 box can only contain each number from 1 to 9 once\n" +
+        "2 - Each vertical column can only contain each number from 1 to 9 once\n" +
+        "3 - Each horizontal row can only contain each number from 1 to 9 once\n\n" +
+        "The puzzle is solved when every row, column, and 3x3 box will contain every number from 1 to 9 exactly once " +
+        "(In other words, no number can be repeated in any 3x3 box, row, or column).");
+        DialogPane dialogPane = alert.getDialogPane();
+        dialogPane.setPrefSize(600, 280);
+        alert.showAndWait();
+    }
     /*------------------------
      * Scene Change Functions
      ------------------------*/
@@ -220,7 +247,7 @@ public class MainscreenController {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("SolutionScreen.fxml"));
             solutionStage =  (Stage)((Node)event.getSource()).getScene().getWindow();
             root = loader.load();
-            scene = new Scene(root, 1080, 720);
+            scene = new Scene(root, 1280, 720);
             // Create a new stage
             SolutionScreenController controller = loader.getController();
             controller.setSolved(result);

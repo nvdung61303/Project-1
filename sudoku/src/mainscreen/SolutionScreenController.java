@@ -236,7 +236,7 @@ public class SolutionScreenController {
         }
     }
     public void setMessage2(int cnt) {
-        this.message2.setText("This puzzle has: " + cnt + " solutions");
+        this.message2.setText("This puzzle has: " + cnt + " solution(s)");
     }
 
     public void setInitialBoard(int[][] initialBoard) {
