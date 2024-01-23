@@ -12,7 +12,7 @@ public class SudokuBoard {
             for(int j=0;j<9;j++)
                 mt[i][j] = 0;
         }
-        //this.mt = mt;
+        
     }
 
 
@@ -80,8 +80,24 @@ public class SudokuBoard {
                 }
             }
                  
-            this.mt = board;
-            this.temp = board;
+            //example
+            int[][] example = 
+            {
+                {1,6,7,9,4,8,5,3,2} ,
+                {4,3,2,6,1,5,7,9,8} ,
+                {8,9,5,3,2,7,1,6,4} ,
+                {3,4,1,8,6,9,2,5,7} ,
+                {2,5,9,1,7,3,8,4,6} ,
+                {6,7,8,2,5,4,3,1,0} ,
+                {9,0,6,5,0,1,4,0,3} ,
+                {5,8,4,0,3,6,9,0,1} ,
+                {7,1,0,4,0,2,6,0,5} 
+            };
+            this.mt = example;
+            this.temp = example;
+            // this.mt = board;
+            // this.temp = board;
+            
             solve(0,0);
 
         }

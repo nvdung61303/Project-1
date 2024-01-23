@@ -15,8 +15,8 @@
             "name": "Main",
             "request": "launch",
             "mainClass": "mainscreen.Main",
-            "projectName": "Project-1_925d3ef6",
-            "vmArgs": "--module-path \"C:/Users/EVO/Downloads/javafx-sdk-17.0.9/lib\" --add-modules javafx.controls,javafx.fxml",
+            "projectName": "GitHub_5d76cdea",
+            "vmArgs": "--module-path \"C:/Users/EVO/Downloads/javafx-sdk-21.0.2/lib\" --add-modules javafx.controls,javafx.fxml"
         }
     ]
 }
