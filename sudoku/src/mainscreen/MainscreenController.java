@@ -230,11 +230,13 @@ public class MainscreenController {
         "Player need to fill the blank cells with the numbers from 1 through to 9 so that:\n" +
         "1 - Each 3x3 box can only contain each number from 1 to 9 once\n" +
         "2 - Each vertical column can only contain each number from 1 to 9 once\n" +
-        "3 - Each horizontal row can only contain each number from 1 to 9 once\n\n" +
+        "3 - Each horizontal row can only contain each number from 1 to 9 once\n" +
+        "Player can input [0] to clear the cell.\n\n" +
+        "Player can use the hint button to check if the board is correct or not, the hint button will highlight the cells that are incorrect.\n\n" +
         "The puzzle is solved when every row, column, and 3x3 box will contain every number from 1 to 9 exactly once " +
         "(In other words, no number can be repeated in any 3x3 box, row, or column).");
         DialogPane dialogPane = alert.getDialogPane();
-        dialogPane.setPrefSize(600, 280);
+        dialogPane.setPrefSize(600, 380);
         alert.showAndWait();
     }
     /*------------------------
@@ -362,6 +364,10 @@ public class MainscreenController {
                             cell.setText(input);
                             int inputValue = Integer.parseInt(input);
                             sudokuBoard.updateValue(finalRow, finalCol, inputValue);
+                            printBoard(sudokuBoard.mt);
+                        } else if (input.equals("0")) {
+                            cell.setText("");
+                            sudokuBoard.updateValue(finalRow, finalCol, 0);
                             printBoard(sudokuBoard.mt);
                         } else {
                             keyEvent.consume();
